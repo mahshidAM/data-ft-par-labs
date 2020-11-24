@@ -15,3 +15,7 @@ SELECT case_number, year, country, COUNT(year) AS count_by_year
 FROM attacks
 GROUP BY year
 ORDER BY count_by_year DESC;
+
+SELECT case_number, country, name, number_of_victims , `fatal_(y/n)`
+FROM attacks
+ORDER BY number_of_victims DESC;
