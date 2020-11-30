@@ -42,4 +42,4 @@ In repositoy of project you find:
 ## Links 
 
 [Repository](https://github.com/mahshidAM/data-ft-par-labs/tree/main/Projects/Week-3)  
-[Slides]()  
+[Slides](https://docs.google.com/presentation/d/106trxUFulapPUJL-i_yZJb2qCaAK1XrjUUM42ZMmHIg/edit#slide=id.gadcb3388d0_0_33)  
