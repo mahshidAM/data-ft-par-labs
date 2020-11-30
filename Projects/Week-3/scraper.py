@@ -1,6 +1,8 @@
 from functions import *
+import requests as r
+from bs4 import BeautifulSoup
 from adaptive import adaptive_scrapping
-import re
+
 
 class Scraper:
  
@@ -61,3 +63,30 @@ class Scraper:
         
         
 
+def collectPath(category):
+    """
+    Collect all path for combination of categories
+    Output list of URLs
+
+    """
+    article_hrefs=[]
+
+    for cat in (categories):
+
+        if cat in category or category == 'all':
+            print('Collect URLs',get_path(cat))
+            resp = adaptive_scrapping(get_path(cat))
+            soup = BeautifulSoup(resp)
+            hrefs = soup.select('article.recipe  div.tile_content a')
+            article_hrefs+=['https://www.cuisineaz.com'+ i.get('href') for i in hrefs]
+            page = 2
+            total_page = len(soup.select('ul.pagination li')) if ',' not in category else 3
+
+            while page < total_page and len(article_hrefs) < 200:
+                resp = r.get(f'{get_path(cat)}?page={page}#listRecettes')
+                soup = BeautifulSoup(resp.content)
+                hrefs = soup.select('article.recipe  div.tile_content a')
+                article_hrefs+=['https://www.cuisineaz.com'+ i.get('href') for i in hrefs]
+                page+=1
+            
+    return article_hrefs

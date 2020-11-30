@@ -3,7 +3,7 @@ from contextlib import closing
 from IPython.display import Markdown, display
 import warnings
 warnings.filterwarnings('ignore')
-timeout_glob=1.5
+timeout_glob=0.5
 verify_glob=True
 allow_glob=True
 def printmd(string):
@@ -36,7 +36,6 @@ def adaptive_scrapping(url, timeout=timeout_glob, verify=verify_glob):
     try:
         resp=r.get(url, stream=True, timeout=timeout_glob, verify=verify_glob, allow_redirects=allow_glob)
         test1=is_good_response(resp)
-        #print(resp)
         if test1[0]:
             return resp.content
         else:

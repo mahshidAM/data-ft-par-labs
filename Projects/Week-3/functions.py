@@ -1,9 +1,13 @@
-import requests as r
-from bs4 import BeautifulSoup
+
 
 categories = {'aperitif':'aperitif-cat48640', 'bases':'bases-cat48653', 'drink':'boissons-cat48664' , 'dessert':'desserts-cat48681',
              'starter':'entrees-cat48785', 'main':'plats-cat48816' }
 def get_path(name):
+    """
+    Convert name to URL
+    Output url for category:name
+
+    """
     h = 'https://www.cuisineaz.com/categories/'
     if name in categories.keys():
         return h + categories[name]
@@ -11,7 +15,11 @@ def get_path(name):
     
 
 def Syntaxe(key):
-    
+    """
+    Get HTML tags for each ket
+    Output html tag
+
+    """
     if key == 'title':
         return 'h1.recipe-title'
     if key == 'total_time':
@@ -37,6 +45,11 @@ def Syntaxe(key):
 
 def get_minutes(text):
 
+    """
+    Convert time in str to minut
+    Output time in min if is convertible, time
+
+    """
     text = text.strip('min') 
     if 'h' in text:
         try:
@@ -49,7 +62,10 @@ def get_minutes(text):
         return text
     
 def rename_difficulty(text):
+    """
+    Rename text if is in the list, text otherwise
 
+    """
     if text == 'Facile':
         return 'easy'
     if text == 'Intermédiaire':
@@ -60,29 +76,13 @@ def rename_difficulty(text):
     return text
 
 def rename_category(text):
+    """
+    Rename text if is in the list, text otherwise
+
+    """
     names= {'Apéritif':'aperitif', 'Bases':'bases', 'Boissons':'drink' , 'Desserts':'desserts',
               'Entrees':'starter', 'Plats':'main' }
     if text in names.keys():
         return names[text]
     return text
     
-def collectPath(category):
-    article_hrefs=[]
-
-    for cat in (categories):
-        if cat in category or category == 'all':
-            resp = r.get(get_path(cat))
-            soup = BeautifulSoup(resp.content)
-            hrefs = soup.select('article.recipe  div.tile_content a')
-            article_hrefs+=['https://www.cuisineaz.com'+ i.get('href') for i in hrefs]
-            page = 2
-            total_page = len(soup.select('ul.pagination li')) if ',' not in category else 3
-
-            while page < total_page and len(article_hrefs) < 200:
-                resp = r.get(f'{get_path(cat)}?page={page}#listRecettes')
-                soup = BeautifulSoup(resp.content)
-                hrefs = soup.select('article.recipe  div.tile_content a')
-                article_hrefs+=['https://www.cuisineaz.com'+ i.get('href') for i in hrefs]
-                page+=1
-            
-    return article_hrefs
