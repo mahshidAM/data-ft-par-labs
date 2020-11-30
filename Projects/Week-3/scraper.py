@@ -2,6 +2,7 @@ from functions import *
 import requests as r
 from bs4 import BeautifulSoup
 from adaptive import adaptive_scrapping
+import re
 
 
 class Scraper:
@@ -58,6 +59,12 @@ class Scraper:
     def image(self):
         try:
             return self.soup.select(Syntaxe('image'))[0].get('data-src')
+        except:
+            return None
+    def ingredients(self):
+        try:
+            return ' '.join([' '.join(i.text.strip().split(':')[::-1]).strip()+', ' if re.match(".*\\d+.*", i.text)
+                                    else i.text.strip() for i in self.soup.select(Syntaxe('ingredients'))])
         except:
             return None
         
